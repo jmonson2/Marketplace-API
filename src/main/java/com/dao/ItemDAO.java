@@ -2,10 +2,7 @@ package com.dao;
 
 import com.vo.ItemVO;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class ItemDAO {
@@ -15,9 +12,8 @@ public class ItemDAO {
     private double itemPrice;
     private boolean itemInStock;
     private int itemQuantity;
-    ArrayList<ItemVO> itemList = new ArrayList<ItemVO>();
-
     public ArrayList<ItemVO> getItems(Connection con) {
+        ArrayList<ItemVO> itemList = new ArrayList<ItemVO>();
         String query = "select * from ITEMS";
         try (Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
@@ -34,6 +30,26 @@ public class ItemDAO {
             System.out.println(e.getMessage());
         }
         return itemList;
+    }
+    public void addItem(Connection con, ItemVO item) {
+        String query = "INSERT INTO public.items" +
+                "(item_name, item_price, item_in_stock, item_quantity)" +
+                "VALUES(?, ?, ?, ?);";
+        try {
+            PreparedStatement psmt = con.prepareStatement(query);
+            psmt.setString(1, item.getItemName());
+            psmt.setDouble(2, item.getItemPrice());
+            psmt.setBoolean(3, item.getItemStock());
+            psmt.setInt(4, item.getItemQuantity());
+            psmt.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void addItems(Connection con, ArrayList<ItemVO> items) {
+        for(int i = 0; i < items.size(); i++)
+            addItem(con, items.get(i));
     }
 //    public Boolean getItemStock(Connection con) {}
 }

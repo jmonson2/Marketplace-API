@@ -1,5 +1,6 @@
 package com.vo;
 
+import com.fasterxml.jackson.annotation.JsonTypeId;
 import org.springframework.stereotype.Component;
 
 @Component("items")
@@ -37,7 +38,7 @@ public class ItemVO {
         this.itemPrice = itemPrice;
     }
 
-    public boolean isItemInStock() {
+    public boolean getItemStock() {
         return itemInStock;
     }
 
